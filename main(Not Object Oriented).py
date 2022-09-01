@@ -1,9 +1,7 @@
 import pygame, sys, time, random
 
-def parry():
-    if parry_avaiable:
-        enemy_rect.x -= 1
-    
+def cursor_motion():
+    pass
     
 pygame.init()
 screen = pygame.display.set_mode((640, 480))
@@ -21,18 +19,17 @@ player = pygame.Surface((50, 50))
 player.fill((255, 0, 0))
 player_rect = player.get_rect(midbottom = (100, 400))
 player_gravity = 0
-player_velocity = 5
-parry_avaiable = False
 
 # Creating enemy
 enemy = pygame.Surface((50, 50))
 enemy.fill((0, 255, 0))
 enemy_rect = enemy.get_rect(midbottom = (400, 400))
-enemy_parry_duration = 2000
 
 #Create event
-parry_timer = pygame.USEREVENT
-pygame.time.set_timer(parry_timer, 1000)
+
+#Timers
+resurrect_timer = pygame.USEREVENT + 1
+pygame.time.set_timer(resurrect_timer, 10000)
 
 while True:
     
@@ -44,27 +41,17 @@ while True:
         if event.type == pygame.KEYDOWN: 
             if event.key == pygame.K_SPACE and player_rect.bottom >= 400: # Adds jumping via gravity
                 player_gravity = -20
-            if event.key == pygame.K_LSHIFT: # Adds Sprint
-                player_velocity = 10
+                
             if event.key == pygame.K_ESCAPE: #Closes the game
                 pygame.quit()
                 sys.exit()
                 
-        if event.type == pygame.KEYUP: #allows the player to stop sprinting
-            if event.key == pygame.K_LSHIFT:
-                player_velocity = 5
-        
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            parry_avaiable = True
-        if event.type == parry_timer:
-            parry_avaiable = False
-    parry()                   
     # Controls the player's movement
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:
-        player_rect.move_ip(-player_velocity, 0)
+        player_rect.move_ip(-5, 0)
     if keys[pygame.K_RIGHT]:
-        player_rect.move_ip(player_velocity, 0)
+        player_rect.move_ip(5, 0)
    
     # Jumping and gravity
     player_gravity += 1

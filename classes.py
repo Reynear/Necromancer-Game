@@ -1,4 +1,3 @@
-from urllib.parse import ParseResultBytes
 import pygame, sys, random
 
 # Create player class
@@ -23,7 +22,7 @@ class Player(pygame.sprite.Sprite):
         self.gravity += 1
         self.rect.y += self.gravity
         if self.rect.bottom >= 300: self.rect.bottom = 300
-
+        
     def update(self):
         self.player_input()
         self.apply_gravity()
@@ -46,6 +45,30 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
         self.parry()
 
+class Crosshair(pygame.sprite.Sprite):
+    def __init__(self, img1, img2):
+        super().__init__()
+        res_tup = (50,50)
+        self.crosshair_img1 = pygame.transform.scale(pygame.image.load(img1).convert_alpha(), res_tup)
+        self.crosshair_img2 = pygame.transform.scale(pygame.image.load(img2).convert_alpha(), res_tup)
+        self.crosshair_list = (self.crosshair_img1, self.crosshair_img2)
+
+    
+        self.crosshair_idx = 0
+        self.image = self.crosshair_list[self.crosshair_idx]
+        self.rect = self.image.get_rect(center = (pygame.mouse.get_pos()))
+
+        
+    def crosshair_movement(self):
+        self.crosshair_idx += 0.05
+        if self.crosshair_idx >= len(self.crosshair_list): self.crosshair_idx = 0
+        self.image = self.crosshair_list[int(self.crosshair_idx)]
+        
+        self.rect = self.image.get_rect(center = (pygame.mouse.get_pos()))
+    def update(self):
+        self.crosshair_movement()
+        
+        
 '''
 class Obstacles(pygame.sprite.Sprite):
     def __init__(self,type):
