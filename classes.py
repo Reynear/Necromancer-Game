@@ -4,25 +4,27 @@ import pygame, sys, random
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.player_surf = pygame.Surface((50, 50))
-        self.image = self.player_surf
+        self.image = pygame.image.load('Assets/player.png')
         self.rect = self.image.get_rect(midbottom = (80, 300))
         self.gravity = 0
 
     def player_input(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_a]:
+        self.keys = pygame.key.get_pressed()
+        if self.keys[pygame.K_a]:
             self.rect.x -= 5
-        if keys[pygame.K_d]:
+        if self.keys[pygame.K_d]:
             self.rect.x += 5
-        if keys[pygame.K_w] and self.rect.bottom >= 300:
+        if self.keys[pygame.K_w] and self.rect.bottom >= 300:
             self.gravity = -20
 
+    def create_main_projectile(self):
+        return Player_Projectile(self.rect.x,self.rect.y)
+    
     def apply_gravity(self):
         self.gravity += 1
         self.rect.y += self.gravity
         if self.rect.bottom >= 300: self.rect.bottom = 300
-        
+
     def update(self):
         self.player_input()
         self.apply_gravity()
@@ -68,7 +70,13 @@ class Crosshair(pygame.sprite.Sprite):
     def update(self):
         self.crosshair_movement()
         
-        
+class Player_Projectile(pygame.sprite.Sprite):
+        def __init__(self,pos_x,pos_y):
+            super().__init__() 
+            self.image = pygame.image.load('Assets/projectile.png')
+            self.rect = self.image.get_rect(midbottom = (pos_x+65, pos_y+35))
+        def update(self):
+            self.rect.x += 5  
 '''
 class Obstacles(pygame.sprite.Sprite):
     def __init__(self,type):
